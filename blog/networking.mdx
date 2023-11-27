@@ -201,6 +201,7 @@ enable - class
 Router>enable
 Router#conf t
 Router#hostname R(number)
+Router(config)#security passwords min-length 8
 Router(config)#line console 0
 Router(config-line)#password cisco1
 Router(config-line)#login
@@ -215,5 +216,6 @@ Router(config-line)#exit
 Router(config)#enable secret class
 Router(config)#service password-encryption
 Router(config)#login block-for 120 attempts 3 within 20
+Router(config)#banner motd #R1 - CCTB - Networks#
 Router(config)#do copy run start
 ```

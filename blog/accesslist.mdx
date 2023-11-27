@@ -1,0 +1,246 @@
+---
+---
+
+# Access List
+
+## R0 g02
+
+```
+hostname R0
+router ospf 10
+router-id 1.1.1.1
+passive-interface g0/0/2
+exit
+int g0/0/2
+decription Link to LAN 192.167.7.192/27 - Net 2001:db8:acad:1::/64
+ip add 192.168.7.193 255.255.255.224
+ipv6 add 2001:db8:acad:1::1/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0 (wrong)
+exit
+ipv6 unicast-routing
+int g0/0/2
+ipv6 ospf 10 area 0
+```
+
+### DHCP R0
+
+```
+ip dhcp excluded-address 192.168.7.193
+ip dhcp pool POOL_LAN1
+network 192.168.7.192 255.255.255.224
+default-router 192.168.7.193
+dns-server 8.8.8.8
+domain-name cctbcollege.ca
+exit
+do copy run start
+int g0/0/2
+no sh
+```
+
+### R0 G01
+
+```
+int g0/0/1
+description Link to Lan 192.168.7.248/30 - Net 2001:db8:acad:2::/64
+ip add 192.168.7.249 255.255.255.252
+ipv6 add 2001:db8:acad:2::1/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0
+no sh
+```
+
+### R0 G00
+
+```
+int g0/0/0
+description Link to Lan 192.168.7.244/30 - Net 2001:db8:acad:4::/64
+ip add 192.168.7.245 255.255.255.252
+ipv6 add 2001:db8:acad:4::1/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0
+no sh
+do copy run start
+```
+
+## R1
+
+```
+hostname R1
+ipv6 unicast-routing
+router ospf 10
+router-id 3.3.3.3
+passive-interface g0/0/0
+exit
+int g0/0/0
+description Link to LAN 192.168.7.224/28 - Net 2001:db8:acad:3::/64
+ip add 192.168.7.225 255.255.255.240
+ipv6 add 2001:db8:acad:3::1/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0
+no sh
+exit
+```
+
+### DHCP
+
+```
+ip dhcp excluded-address 192.168.7.255
+ip dhcp pool POOL_LAN2
+network 192.168.7.224 255.255.255.240
+default-router 192.168.7.255
+dns-server 8.8.8.8
+domain-name cctbcollege.caexit
+do copy run start
+```
+
+### Addressing
+
+```
+int g0/0/1
+description Link to Lan 192.168.7.248/30 - Net 2001:db8:acad:2::/64
+ip add 192.168.7.250 255.255.255.252
+ipv6 add 2001:db8:acad:2::2/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0
+no sh
+int g0/0/2
+description Link to Lan 192.168.7.240/30 - Net 2001:db8:acad:5::/64
+ip add 192.168.7.241 255.255.255.252
+ipv6 add 2001:db8:acad:5::1/64
+ip ospf 10 area 0
+ipv6 ospf 10 area
+no sh
+```
+
+## R2
+
+```
+hostname R2
+ipv6 unicast-routing
+router ospf 10
+router-id 2.2.2.2
+passive-interface g0/0/1
+exit
+int g0/0/0
+description Link to Lan 192.168.7.224/30 - Nety 2001:db8:acad:4::/64
+ip add 192.168.7.246 255.255.255.252
+ipv6 add 2001:db8:acad:4::2/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0
+no sh
+int g0/0/2
+description link to Lan 192.168.7.240/30 - Net 2001: db8:acad:5::/64
+ip add 192.168.7.242 255.255.255.252
+ipv6 add 2001:db8:acad:5::2/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0
+no sh
+do copy run start
+int g0/0/1
+description Link to LAN 192.168.7.128/26 - Net 2001:db8:acad:6::/64
+ip add 192.168.7.129 255.255.255.192
+ipv6 add 2001:db8:acad:6::1/64
+ip ospf 10 area 0
+ipv6 ospf 10 area 0
+no sh
+```
+
+### DHCP
+
+```
+ip dhcp excluded 192.168.7.129
+ip dhcp excluded-address 192.168.7.140
+ip dhcp pool POOL_LAN3
+default-router 192.168.7.129
+network 192.168.7.128 255.255.255.192
+dns-server 8.8.8.8
+domain-name cctbcollege.ca
+exit
+do copy run start
+```
+
+# Server
+
+192.168.7.140
+255.255.255.192
+192.168.7.129
+8.8.8.8
+
+2001:db8:acad:6::140
+
+# Acces List
+
+## R2
+
+```
+access-list 10 deny 192.168.7.224 0.0.0.15
+exit
+show access-list
+ip g0/0/1
+ip access-group 10 out
+exit
+access-list 10 permit any
+exit
+```
+
+## R1
+
+```
+access-list 10 deny 192.168.7.192 0.0.0.31
+access-list 20 permit any
+int g0/0/0
+ip access-group 10 out
+
+```
+
+## R2
+
+```
+ip access-list standard 10
+9 permit host 192.168.7.226
+end
+show access control-lists
+```
+
+## R1
+
+```
+ip dhcp excluded-address 192.168.7.226
+```
+
+## R0
+
+```
+ip dhcp excluded-address 192.168.7.200
+```
+
+## R2
+
+```
+ip access-list standard 10
+8 permit host 192.168.7.200
+11 deny 192.168.7.192 0.0.0.31
+end
+```
+
+## NEXTCLASS
+
+```
+permit tcp host 192.168.7.140 jpst 192.168.7.226 established
+ip access-list extended REPLY_PC1
+
+ip access-group REPLY_PC1 out
+```
+
+## Wednesday
+
+```
+
+```
+
+## Extended Access List
+
+```
+
+```
