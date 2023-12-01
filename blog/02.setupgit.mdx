@@ -3,18 +3,22 @@ title: Setting Up SSH Keys for Git
 date: November 28, 2023
 description: Welcome to the world of version control! If you're new to Git or looking to enhance your workflow, setting up SSH keys is a crucial step. In this post, we'll walk through the process of configuring SSH keys for GitHub, GitLab and BitBucket.
 tags: ["Git", "SSH"]
-img: /images/setupgit01.png
+img: /images/02.setupgitssh.png
 ---
 
-# Setting Up SSH Keys for Git: A Guide for GitHub, GitLab, and Bitbucket
+## Table of Contents
 
-Welcome to the world of version control! If you're new to Git or looking to enhance your workflow, setting up SSH keys is a crucial step. In this guide, we'll walk through the process of configuring SSH keys for three popular Git hosting platforms: GitHub, GitLab, and Bitbucket.
+1. [Why use ssh keys?](#why-use-ssh-keys)
+   - [Generate SSH Key Pair](#generate-ssh-key-pair)
+   - [Add SSH key to SSH Agent](#add-ssh-key-to-ssh-agent)
+   - [Copy your SSH key to your account](#copy-your-ssh-key-to-your-account)
+   - [Test your connection](#test-your-connection)
 
 ## Why Use SSH keys?
 
 SSH keys provide a secure way to authenticate with remote repositories, eliminating the need to enter your username and password every time you interact with Git. They enhance security and streamline your workflow.
 
-### Generate SSH Key Pair:
+### Generate SSH Key Pair
 
 - On Linux/macOS:
   Open a terminal and enter the following command, replacing the email with the one associated with your Git account.
@@ -27,20 +31,7 @@ $ ssh-keygen -t ed25519 -C "your.user@example.com"
 $ ssh-keygen -t rsa -b 4096 -C "your.user@example.com"
 ```
 
-> **Note**
-> Your note text here
-
-> :warning: Reemplazar **your.user@example.com** for your preference mail.
-
-> :memo: **This is a Note**: Description text here
-
-> :bulb: **This is a Hint**: Description text here
-
-> :heavy_check_mark: **Check**: Description text here
-
-> :information_source: There are many **encription algorimts**, each platform have them own preference.
-
-### Add SSH key to SSH Agent:
+### Add SSH key to SSH Agent
 
 The SSH agent is a background process that manages your SSH keys. Run the following commands to add your SSH key to the agent:
 
@@ -52,7 +43,7 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_rsa
 ```
 
-### Copy your SSH key to your account:
+### Copy your SSH key to your account
 
 ```
 $ ssh-add -L
@@ -79,7 +70,7 @@ $ ssh-add -L
 > Click Add Key, paste your key, and add a label.
 > Click Add Key.
 
-### Test your connection:
+### Test your connection
 
 ```
 ssh -T git@github.com   # For GitHub
